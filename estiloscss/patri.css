@@ -1,0 +1,119 @@
+body {
+    background-color: #dbdbda;
+    font-family: 'Open Sans', sans-serif;
+
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 82%;
+    background-color: #3274c9;
+
+}
+
+.title {
+    font-style: oblique;
+    font-size: xx-large;
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2%;
+    margin-left: 47%;
+    
+}
+
+.logo {
+    position: absolute;
+    display: flex;
+    width: 8%;
+    margin-left: 5%;
+    margin-top: 0;
+    
+}
+
+*{
+    padding: 5px;
+    margin: 0;
+ }
+ 
+ .navbar{
+    background-color: #3274c9;
+    padding: 20px;
+    display: flex;
+    top: 19%;
+    left: 0;
+    right: 0;
+    align-items: center;
+    position: absolute;
+ }
+ .nav-itens{
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50% ;
+    transform: translate(-50%, -50%);
+ }
+ 
+ a{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-weight: bold;  
+ }
+
+ .navlogo{
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    font-size: x-large;
+    font-style: oblique;
+    position: absolute;
+    left: 6%;
+ }
+ ul{
+    list-style: none;
+ }
+ .navbar ul li{
+    margin-left: 30px;
+    right: 15%;
+ }
+
+.container{
+    position: absolute;
+    top: 65%;
+    left: 52% ;
+    transform: translate(-50%, -50%);
+    background-color: #dbdbda;
+    width: 60%;
+    height: 70%;
+    border-style:groove;
+}
+
+.container h1 { 
+   font-style: oblique;
+   font-size: 2em;
+   background-color: #3274c9;
+   border-bottom: 1px #f0eded solid;
+   margin-bottom: 10px;
+   padding-bottom: 10px;
+   display: flex;
+   justify-content: center;
+}
+
+.formcont{
+   padding: 5px;
+   margin-bottom: 10px;  
+   border: #3274c9;
+   height: 29px;
+}
+
+.btncadastrar{
+   position: absolute;
+   left: 370px;
+}
+
+
+
+
+
