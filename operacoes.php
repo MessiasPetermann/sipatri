@@ -2,7 +2,7 @@
 include "conexao.php";
 
 /**
- * Insere os dados no banco de dados e retorna a página principal
+ * Insere os dados em duas tabelas do banco de dados e retorna a página principal
  */
 if (isset($_POST['data'])) {
     // Verifica se a nota fiscal já existe na tabela tb_cod_nota
@@ -27,7 +27,7 @@ if (isset($_POST['data'])) {
         $idCodNota = $resultCodNota['notafiscal'];
     }
 
-    // Insere os dados na tb_patrimonios usando o ID da tb_cod_nota
+    // Insere os dados na tb_patrimonios
     $sql = $pdo->prepare("INSERT INTO tb_patrimonios VALUES (NULL, :descricao, :origem, :setor, :situacao, :identificacao, :data, :classificacao, :notafiscal)");
     $sql->execute([
         'descricao' => $_POST['descricao'],
@@ -37,12 +37,13 @@ if (isset($_POST['data'])) {
         'identificacao' => $_POST['identificacao'],
         'data' => $_POST['data'],
         'classificacao' => $_POST['classificacao'],
-        'notafiscal' => $idCodNota
+        'notafiscal' => $_POST['notafiscal']
     ]);
 
     header("Location: index.php");
     exit();
-} else {
+} 
+else {
     echo 'Erro ao Cadastrar';
 }
 ?>
