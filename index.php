@@ -19,7 +19,7 @@
     </header>
 
     <nav class="navbar">
-        <div class="navlogo"><p>Sispatri</p></div>
+
         <ul class="nav-itens">
            <li><a href="index.php" data-link>Cadastrar</a></li>
            <li><a href="listar.php" data-link>Listar</a></li>
@@ -51,7 +51,7 @@
         <input type="text" name="nomefantasia" required>
     </div>
 
-    <div class="formcont">
+    <div class="selectcont">
         <select name="setor" data-size = "3" required>
             <option  value="">Selecione o setor</option>
             <option value="AS01">ASSEIJ</option>
@@ -97,7 +97,7 @@
         </select>
     </div>
 
-    <div class="formcont">
+    <div class="selectcont1">
         <select name="origem" required>
             <option value="">Selecione a origem</option>
             <option value="1">Aquisição</option>
@@ -106,7 +106,7 @@
         </select>
     </div>   
 
-    <div class="formcont">
+    <div class="selectcont2">
         <select name="situacao" required>
             <option value="">Selecione a situação</option>
             <option value="1">Ativo</option>
@@ -115,7 +115,7 @@
         </select>
      </div>
 
-     <div class="formcont">
+     <div class="selectcont3">
         <select name="identificacao">
             <option value="">Selecione um tipo de identificação</option>
             <option value="1">Placa</option>
@@ -127,7 +127,7 @@
 
     
 
-    <div class="formcont">
+    <div class="selectcont4">
         <select name="classificacao" id="">
             <option value="">Selecione uma classificação</option>
             <option value="1000">Móveis</option>

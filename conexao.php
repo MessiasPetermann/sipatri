@@ -1,4 +1,5 @@
-<?php 
-    $pdo = new PDO('mysql:host=localhost;dbname=sispatri','root', '');
+<?php
 
+    $pdo = new PDO('mysql:host=localhost;dbname=sispatri','root', '');
+    
 ?>

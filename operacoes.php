@@ -6,7 +6,7 @@ include "conexao.php";
  */
 if (isset($_POST['data'])) {
     // Verifica se a nota fiscal já existe na tabela tb_cod_nota
-    $sqlCheckNota = $pdo->prepare("SELECT * FROM tb_cod_nota WHERE notafiscal = :notafiscal");
+    $sqlCheckNota = $pdo->prepare("SELECT * FROM tb_cod_nota WHERE notafiscal = :notafiscal");  
     $sqlCheckNota->execute(['notafiscal' => $_POST['notafiscal']]);
 
     if ($sqlCheckNota->rowCount() == 0) {
@@ -16,9 +16,7 @@ if (isset($_POST['data'])) {
             'notafiscal' => $_POST['notafiscal'],
             'nomefantasia' => $_POST['nomefantasia']
         ]);
-
-        // Obtém o ID do registro inserido em tb_cod_nota
-        $idCodNota = $pdo->lastInsertId();
+  
     } else {
         // Se a notafiscal existir, pega o ID da tb_cod_nota
         $sqlCodNota = $pdo->prepare("SELECT notafiscal FROM tb_cod_nota WHERE notafiscal = :notafiscal");

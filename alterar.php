@@ -19,7 +19,6 @@
     </header>
 
     <nav class="navbar">
-        <div class="navlogo"><p>Sispatri</p></div>
         <ul class="nav-itens">
            <li><a href="index.php" data-link>Cadastrar</a></li>
            <li><a href="listar.php" data-link>Listar</a></li>
@@ -28,7 +27,7 @@
     </nav>
 
 <div class="container">
-        <h1>Cadastro</h1>
+        <h1>Alterar</h1>
     <form class="formulario"  method ='POST' action = 'operacoes.php'>
 
     
