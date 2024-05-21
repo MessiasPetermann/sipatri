@@ -26,28 +26,44 @@
        </ul>
     </nav>
 
-<div class="container">
-        <h1>Listar</h1>
-    <form class="formulario"  method ='POST' action = 'operacoes.php'>
+    <body>
+    <div class="container">
+        <h1>Listar Patrimônios</h1>
+        <form class="formulario" id="formulario" method="GET">
+            <div>
+                <label for="Buscar"><b>Buscar por:</b></label>
+                <input type="text" name="Buscar" id="valor" required> 
+                <button class="btnbuscar" type="submit">Buscar</button>
+            </div>
+        </form>
+        <div id="resultado">
+        <?php
+        include "conexao.php";
 
-    
-    </form>
-</body>
-</html>
-<?php
-    include "conexao.php";
+        if(isset($_GET['Buscar']) && !empty($_GET['Buscar'])) {
 
-    $consulta = $pdo->prepare("SELECT * FROM tb_patrimonios");
-    $consulta->execute();
-    $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+            $buscar = $_GET['Buscar'];
 
-    foreach ($resultados as $linha) {
-        echo "<p>";
-        foreach ($linha as $coluna => $valor) {
-            echo "<strong>{$coluna}:</strong> {$valor} <br>";
+            $consulta = $pdo->prepare("SELECT * FROM tb_patrimonios WHERE descricao LIKE :buscar");
+            $busca_param = "%$buscar%";
+            $consulta->bindParam(':buscar', $busca_param);
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+            if($resultados) {
+                foreach ($resultados as $linha) {
+                    echo "<p>";
+                    foreach ($linha as $coluna => $valor) {
+                        echo "<strong>{$coluna}:</strong> {$valor} <br>";
+                    }
+                    echo "</p>";
+                }
+            } else {
+                echo "<p>Nenhum resultado encontrado.</p>";
+            }
         }
-        echo "</p>";
-    }
-    
-
-?>   
+        ?>
+        </div>
+    </div>
+</body>
+</html> 
