@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sispatri</title>
     <link rel="stylesheet" href="estiloscss/patri.css">
-    <link href="operacoes.php">
 
 </head>
 
