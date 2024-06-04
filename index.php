@@ -30,7 +30,7 @@
 
     <div class="container">
         <h1>Cadastro</h1>
-        <form class="formulario" method='POST' action='operacoes.php'>
+        <form class="formulario" method='POST' action='operacoes.php' enctype="multipart/form-data">
 
             <div class="formcont">
                 <label for="data"><b>Data:</b></label>
@@ -50,6 +50,11 @@
             <div class="formcont">
                 <label for="nomefantasia"><b>Nome Fantasia:</b></label>
                 <input type="text" name="nomefantasia" required>
+            </div>
+
+            <div class="formcont">
+                <label for="arquivos"><b>Arquivos:</b></label>
+                <input type="file" name="file">
             </div>
 
             <div class="selectcont">
@@ -137,7 +142,7 @@
                 </select>
             </div>
 
-            <div class="formcont"><button class="btncadastrar" type="submit">Cadastrar</button></div>
+            <div class="formcont"><button class="btncadastrar" type="submit" value="Upload">Cadastrar</button></div>
         </form>
 </body>
 
