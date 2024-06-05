@@ -52,14 +52,14 @@ a {
 }
 
 .container {
-   width: 75%;
+   width: 85%;
    position: relative;
    background-color: #dbdbda;
    padding: 5px;
    margin-left: auto;
    margin-right: auto;
    margin-top: 5%;
-   border: 2px solid #000000; /* Adiciona uma borda sólida de 2px com a cor #3274c9 */
+   border: 2px solid #000000; 
 }
 
 

@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo "Formulário recebido.<br>";
 
     // Diretório para armazenar as imagens
-    $uploadDirectory = "/uploads/";
+    $uploadDirectory = dirname(__FILE__)."/uploads/";
     if (!is_dir($uploadDirectory)) {
         mkdir($uploadDirectory, 0777, true);
     }

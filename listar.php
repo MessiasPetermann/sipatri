@@ -151,9 +151,17 @@
                                 $data = DateTime::createFromFormat('Y-m-d', $valor);
                                 if ($data !== false) {
                                     $valor = $data->format('d/m/Y');
-                                }
+                                } 
+                            }  elseif ($coluna == 'imagem') {
+                                // Remove a parte local do caminho e cria a URL relativa
+                                $relative_path = str_replace("C:\\xampp\\htdocs\\sispatri\\", "", $valor);
+                                $relative_path = str_replace("\\", "/", $relative_path); 
+                                $url = "/sispatri/uploads/" . basename($relative_path); // Usa apenas o nome do arquivo
+                                $valor = "<a href='" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "' target='_blank'>Ver imagem</a>";
+                            } else {
+                                $valor = htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
                             }
-                            echo "<td>" . htmlspecialchars($valor) . "</td>";
+                            echo "<td>" . $valor . "</td>";
                         }
                         echo "</tr>";
                     }

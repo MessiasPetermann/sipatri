@@ -54,7 +54,8 @@
 
             <div class="formcont">
                 <label for="arquivos"><b>Arquivos:</b></label>
-                <input type="file" name="file">
+                <input type="file" name="file" id="img_upd">
+                <img src="" id="preview_img" style="max-width: 300px;"/>
             </div>
 
             <div class="selectcont">
@@ -145,5 +146,17 @@
             <div class="formcont"><button class="btncadastrar" type="submit" value="Upload">Cadastrar</button></div>
         </form>
 </body>
-
+<script>
+    document.getElementById('img_upd').addEventListener('change', function(event){
+        const file = event.target.files[0];
+        if(file){
+            const reader = new FileReader();
+            reader.onload = function(e){
+                const prvImg = document.getElementById('preview_img');
+                prvImg.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 </html>
