@@ -28,7 +28,7 @@
         </ul>
     </nav>
 
-    <div class="container">
+    <div class="container" style="width: 60%;">
         <h1>Cadastro</h1>
         <form class="formulario" method='POST' action='operacoes.php' enctype="multipart/form-data">
 
