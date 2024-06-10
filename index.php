@@ -7,6 +7,7 @@
     <title>Sispatri</title>
     <link rel="stylesheet" href="estiloscss/patri.css">
     <link href="operacoes.php">
+    
 
 </head>
 
@@ -28,13 +29,14 @@
         </ul>
     </nav>
 
-    <div class="container" style="width: 60%;">
+    <div class="container" style="width: 50%;">
         <h1>Cadastro</h1>
         <form class="formulario" method='POST' action='operacoes.php' enctype="multipart/form-data">
 
             <div class="formcont">
                 <label for="data"><b>Data:</b></label>
-                <input type="date" name="data">
+                <input type="date" name="data" required>
+                
             </div>
 
             <div class="formcont">
@@ -54,7 +56,7 @@
 
             <div class="formcont">
                 <label for="arquivos"><b>Arquivos:</b></label>
-                <input type="file" name="file" id="img_upd">
+                <input type="file" name="file" id="img_upd" required>
                 <img src="" id="preview_img" style="max-width: 300px;"/>
             </div>
 
@@ -123,7 +125,7 @@
             </div>
 
             <div class="selectcont3">
-                <select name="identificacao">
+                <select name="identificacao" required>
                     <option value="">Selecione um tipo de identificação</option>
                     <option value="1">Placa</option>
                     <option value="2">Plaqueta</option>
