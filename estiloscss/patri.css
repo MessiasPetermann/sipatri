@@ -96,38 +96,34 @@ a:hover {
    margin-bottom: 5px; 
    padding: 5px; 
    box-sizing: border-box;
+   top: 50%;
 }
-
-.formcont label {
-   margin-bottom: 5px;
-}
-
 
 .selectcont {
    position: absolute; 
    right: 5%;
-   top: 100px;
+   top: 80px;
 }
 .selectcont1 {
    position: absolute; 
    right: 29%;
-   top: 150px;
+   top: 120px;
 }
 .selectcont2 {
    position: absolute; 
    right: 28%;
-   top: 200px;
+   top: 160px;
 }
 .selectcont3 {
    position: absolute; 
    right: 17%;
-   top: 250px;
+   top: 200px;
 }
 
 .selectcont4 {
    position: absolute; 
    right: 22%;
-   top: 300px;
+   top: 240px;
 }
 
 .btncadastrar {

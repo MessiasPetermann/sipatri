@@ -33,29 +33,23 @@
         <h1>Cadastro</h1>
         <form class="formulario" method='POST' action='operacoes.php' enctype="multipart/form-data">
 
-            <div class="formcont">
-                <label for="data"><b>Data:</b></label>
-                <input type="date" name="data" required>
-                
+            <div class="formcont">                
+                <input type="date" name="data" required>               
             </div>
 
-            <div class="formcont">
-                <label for="descricao"><b>Descrição:</b></label>
+            <div class="formcont">                
                 <input type="text" placeholder="Digite a Descrição" name="descricao" required>
             </div>
 
             <div class="formcont">
-                <label for="notafiscal"><b>Nota Fiscal:</b></label>
-                <input type="text" name="notafiscal" required>
+                <input type="text" placeholder="Digite a Nota Fiscal" name="notafiscal" required>
             </div>
 
             <div class="formcont">
-                <label for="nomefantasia"><b>Nome Fantasia:</b></label>
-                <input type="text" name="nomefantasia" required>
+                <input type="text" placeholder="Digite o Nome Fantasia" name="nomefantasia" required>
             </div>
 
             <div class="formcont">
-                <label for="arquivos"><b>Arquivos:</b></label>
                 <input type="file" name="file" id="img_upd" required>
                 <img src="" id="preview_img" style="max-width: 300px;"/>
             </div>
