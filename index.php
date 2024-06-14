@@ -13,7 +13,7 @@
 
 <body>
     <header class=topo>
-        <div class="title">Sispatri</div>
+        <div class="title">Sipatri</div>
         <div class=img>
             <img src="imagens/logo.png" alt="logo" class=logo>
         </div>

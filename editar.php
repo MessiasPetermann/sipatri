@@ -3,20 +3,24 @@ include "conexao.php";
 
 $patrimonio = null;
 
+// Verifica se o código do patrimônio foi passado via GET
 if (isset($_GET['codigo']) && !empty($_GET['codigo'])) {
     $codigo = $_GET['codigo'];
+
+    // Consulta o patrimônio no banco de dados
     $consulta = $pdo->prepare("SELECT * FROM tb_patrimonios WHERE codigo = :codigo");
     $consulta->bindParam(':codigo', $codigo, PDO::PARAM_INT);
     $consulta->execute();
     $patrimonio = $consulta->fetch(PDO::FETCH_ASSOC);
 
+    // Verifica se o patrimônio foi encontrado
     if (!$patrimonio) {
         echo "<p>Patrimônio não encontrado.</p>";
         exit;
     }
 }
 
-// Arrays de mapeamento
+// Arrays de mapeamento para os selects
 $setores = [
     'TI01' => 'Tecnologia da Informação',
     'AS01' => 'ASSEIJ',
@@ -84,8 +88,90 @@ $classificacoes = [
     '2000' => 'Estante',
     '3000' => 'Eletrônicos',
 ];
-?>
 
+// Verifica se o formulário foi submetido para atualização
+if (isset($_POST['update'])) {
+    // Inicializa array de erros
+    $erros = [];
+
+    // Captura e valida os dados do formulário
+    $codigo = $_POST['codigo'];
+    $descricao = $_POST['descricao'];
+    $setor = $_POST['setor'];
+    $origem = $_POST['origem'];
+    $situacao = $_POST['situacao'];
+    $identificacao = $_POST['identificacao'];
+    $classificacao = $_POST['classificacao'];
+    $data = $_POST['data'];
+
+    // Validação de cada campo
+    if (empty($descricao)) {
+        $erros[] = "O campo 'Descrição' é obrigatório.";
+    }
+    if (empty($setor)) {
+        $erros[] = "O campo 'Setor' é obrigatório.";
+    }
+    if (empty($origem)) {
+        $erros[] = "O campo 'Origem' é obrigatório.";
+    }
+    if (empty($situacao)) {
+        $erros[] = "O campo 'Situação' é obrigatório.";
+    }
+    if (empty($identificacao)) {
+        $erros[] = "O campo 'Identificação' é obrigatório.";
+    }
+    if (empty($classificacao)) {
+        $erros[] = "O campo 'Classificação' é obrigatório.";
+    }
+    if (empty($data)) {
+        $erros[] = "O campo 'Data' é obrigatório.";
+    }
+
+    // Se não houver erros, realiza a atualização no banco de dados
+    if (count($erros) === 0) {
+        // Trata o upload da imagem, se houver
+        $target_file = null; // mantém a imagem existente se não houver nova
+        if (!empty($_FILES['imagem']['name'])) {
+            $imagem = $_FILES['imagem']['name'];
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($imagem);
+            move_uploaded_file($_FILES['imagem']['tmp_name'], $target_file);
+        }
+
+        if($target_file==null){
+            // Prepara e executa a consulta SQL para atualização
+            $update = $pdo->prepare("UPDATE tb_patrimonios SET descricao = :descricao, setor = :setor, origem = :origem, situacao = :situacao, identificacao = :identificacao, classificacao = :classificacao, data = :data WHERE codigo = :codigo");
+            $update->bindParam(':descricao', $descricao);
+            $update->bindParam(':setor', $setor);
+            $update->bindParam(':origem', $origem);
+            $update->bindParam(':situacao', $situacao);
+            $update->bindParam(':identificacao', $identificacao);
+            $update->bindParam(':classificacao', $classificacao);
+            $update->bindParam(':data', $data);
+            $update->bindParam(':codigo', $codigo, PDO::PARAM_INT);
+            $update->execute();
+        }else{
+            // Prepara e executa a consulta SQL para atualização
+            $update = $pdo->prepare("UPDATE tb_patrimonios SET descricao = :descricao, setor = :setor, origem = :origem, situacao = :situacao, identificacao = :identificacao, classificacao = :classificacao, data = :data, imagem = :imagem WHERE codigo = :codigo");
+            $update->bindParam(':descricao', $descricao);
+            $update->bindParam(':setor', $setor);
+            $update->bindParam(':origem', $origem);
+            $update->bindParam(':situacao', $situacao);
+            $update->bindParam(':identificacao', $identificacao);
+            $update->bindParam(':classificacao', $classificacao);
+            $update->bindParam(':data', $data);
+            $update->bindParam(':imagem', $target_file);
+            $update->bindParam(':codigo', $codigo, PDO::PARAM_INT);
+            $update->execute();
+        }
+
+        // Redireciona para outra página após a atualização
+        header("Location: alterar.php");
+        exit;
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -161,9 +247,14 @@ $classificacoes = [
             <input type="date" id="data" name="data" value="<?php echo htmlspecialchars($patrimonio['data'] ?? ''); ?>" required><br>
 
             <label for="imagem">Imagem:</label>
-            <input type="file" id="imagem" name="imagem" required>
-            <img id="previewImage" src="" alt="Imagem Selecionada">
-
+        <input type="file" id="imagem" name="imagem"><br>
+        <?php 
+            if (!empty($patrimonio['imagem'])){
+                echo '<img id="previewImage" src="'.htmlspecialchars($patrimonio['imagem']).'" alt="Imagem Selecionada" style="display: block;">';
+            }else{
+                echo '<p>Nenhuma imagem selecionada.</p>';
+            }
+        ?>
             <button type="submit" name="update">Atualizar</button>
         </form>
     </div>
@@ -171,79 +262,6 @@ $classificacoes = [
 </body>
 
 </html>
-
-<?php
-if (isset($_POST['update'])) {
-    $codigo = $_POST['codigo'];
-    $descricao = $_POST['descricao'];
-    $setor = $_POST['setor'];
-    $origem = $_POST['origem'];
-    $situacao = $_POST['situacao'];
-    $identificacao = $_POST['identificacao'];
-    $classificacao = $_POST['classificacao'];
-    $data = $_POST['data'];
-
-    // Tratamento da imagem
-    if (!empty($_FILES['imagem']['name'])) {
-        $imagem = $_FILES['imagem']['name'];
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($imagem);
-        move_uploaded_file($_FILES['imagem']['tmp_name'], $target_file);
-    } else {
-        $target_file = $patrimonio['imagem'] ?? '';
-    }
-    $erros = [];
-    $update = $pdo->prepare("UPDATE tb_patrimonios SET descricao = :descricao, setor = :setor, origem = :origem, situacao = :situacao, identificacao = :identificacao, classificacao = :classificacao, data = :data, imagem = :imagem WHERE codigo = :codigo");
-    $update->bindParam(':descricao', $descricao);
-    $update->bindParam(':setor', $setor);
-    $update->bindParam(':origem', $origem);
-    $update->bindParam(':situacao', $situacao);
-    $update->bindParam(':identificacao', $identificacao);
-    $update->bindParam(':classificacao', $classificacao);
-    $update->bindParam(':data', $data);
-    $update->bindParam(':imagem', $target_file);
-    $update->bindParam(':codigo', $codigo, PDO::PARAM_INT);
-
-
-
-
-    // Validação de cada campo
-    if (empty($descricao)) {
-        $erros[] = "O campo 'Descrição' é obrigatório.";
-    }
-    if (empty($setor)) {
-        $erros[] = "O campo 'Setor' é obrigatório.";
-    }
-    if (empty($origem)) {
-        $erros[] = "O campo 'Origem' é obrigatório.";
-    }
-    if (empty($situacao)) {
-        $erros[] = "O campo 'Situação' é obrigatório.";
-    }
-    if (empty($identificacao)) {
-        $erros[] = "O campo 'Identificação' é obrigatório.";
-    }
-    if (empty($classificacao)) {
-        $erros[] = "O campo 'Classificação' é obrigatório.";
-    }
-    if (empty($data)) {
-        $erros[] = "O campo 'Data' é obrigatório.";
-    }
-
-
-    if (count($erros) > 0) {
-
-        echo "<ul>";
-        foreach ($erros as $erro) {
-            echo "<li>$erro</li>";
-        }
-        echo "</ul>";
-        exit();
-    }
-    $update->execute();
-
-}
-?>
 
 <script>
     const imageInput = document.getElementById('imagem');
