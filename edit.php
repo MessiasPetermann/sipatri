@@ -1,5 +1,6 @@
 <?php
 include "conexao.php";
+
 // Arrays de mapeamento para converter os valores
 $setores = [
     'TI01' => 'Tecnologia da Informação',
@@ -69,26 +70,53 @@ $classificacoes = [
     '3000' => 'Eletrônicos',
 ];
 
+// Função para obter a chave correspondente ao valor amigável
 function getKeyFromFriendlyValue($array, $value)
-    {
-        $value = strtolower($value);
-        foreach ($array as $key => $friendlyValue) {
-            if (stripos($friendlyValue, $value) !== false) {
-                return $key;
-            }
+{
+    $value = strtolower($value);
+    foreach ($array as $key => $friendlyValue) {
+        if (stripos($friendlyValue, $value) !== false) {
+            return $key;
         }
-        return null;
     }
+    return null;
+}
 
 // Verifica se os parâmetros foram passados via GET
 if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
     $buscar = $_GET['buscar'];
 
+    // Mapear valor amigável para chave correspondente, se aplicável
+    $buscarSetor = getKeyFromFriendlyValue($setores, $buscar);
+    $buscarOrigem = getKeyFromFriendlyValue($origens, $buscar);
+    $buscarSituacao = getKeyFromFriendlyValue($situacoes, $buscar);
+    $buscarIdentificacao = getKeyFromFriendlyValue($identificacoes, $buscar);
+    $buscarClassificacao = getKeyFromFriendlyValue($classificacoes, $buscar);
+
     // Preparar e executar a consulta
-    $sql = "SELECT * FROM tb_patrimonios WHERE descricao LIKE :buscar OR setor LIKE :buscar OR origem LIKE :buscar OR situacao LIKE :buscar OR identificacao LIKE :buscar OR classificacao LIKE :buscar OR notafiscal LIKE :buscar OR data LIKE :buscar";
+    $sql = "SELECT * FROM tb_patrimonios WHERE 
+        descricao LIKE :buscar OR 
+        setor LIKE :buscarSetor OR 
+        setor LIKE :buscar OR
+        origem LIKE :buscarOrigem OR 
+        origem LIKE :buscar OR
+        situacao LIKE :buscarSituacao OR 
+        situacao LIKE :buscar OR
+        identificacao LIKE :buscarIdentificacao OR 
+        identificacao LIKE :buscar OR
+        classificacao LIKE :buscarClassificacao OR 
+        classificacao LIKE :buscar OR
+        notafiscal LIKE :buscar OR 
+        data LIKE :buscar";
+    
     $consulta = $pdo->prepare($sql);
     $busca_param = "%$buscar%";
     $consulta->bindParam(':buscar', $busca_param);
+    $consulta->bindParam(':buscarSetor', $buscarSetor);
+    $consulta->bindParam(':buscarOrigem', $buscarOrigem);
+    $consulta->bindParam(':buscarSituacao', $buscarSituacao);
+    $consulta->bindParam(':buscarIdentificacao', $buscarIdentificacao);
+    $consulta->bindParam(':buscarClassificacao', $buscarClassificacao);
     $consulta->execute();
     $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
@@ -98,7 +126,7 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
 
         foreach ($resultados[0] as $coluna => $valor) {
             if ($coluna != 'codigo') { // Oculta a coluna "codigo"
-                echo "<th>" . htmlspecialchars($coluna) . "</th>";
+                echo "<th>" . strtoupper(htmlspecialchars($coluna)) . "</th>";
             }
         }
 
@@ -147,3 +175,4 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
         echo "<p>Nenhum resultado encontrado.</p>";
     }
 }
+?>
