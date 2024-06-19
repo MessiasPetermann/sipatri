@@ -50,7 +50,7 @@
             </div>
 
             <div class="formcont">
-                <input type="file" name="file" id="img_upd" required>
+                <input type="file" name="file" id="img_upd">
                 <img src="" id="preview_img" style="max-width: 300px;"/>
             </div>
 
