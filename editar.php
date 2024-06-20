@@ -138,7 +138,7 @@ if (isset($_POST['update'])) {
             move_uploaded_file($_FILES['imagem']['tmp_name'], $target_file);
         }
 
-        if($target_file==null){
+        if ($target_file == null) {
             // Prepara e executa a consulta SQL para atualização
             $update = $pdo->prepare("UPDATE tb_patrimonios SET descricao = :descricao, setor = :setor, origem = :origem, situacao = :situacao, identificacao = :identificacao, classificacao = :classificacao, data = :data WHERE codigo = :codigo");
             $update->bindParam(':descricao', $descricao);
@@ -150,7 +150,7 @@ if (isset($_POST['update'])) {
             $update->bindParam(':data', $data);
             $update->bindParam(':codigo', $codigo, PDO::PARAM_INT);
             $update->execute();
-        }else{
+        } else {
             // Prepara e executa a consulta SQL para atualização
             $update = $pdo->prepare("UPDATE tb_patrimonios SET descricao = :descricao, setor = :setor, origem = :origem, situacao = :situacao, identificacao = :identificacao, classificacao = :classificacao, data = :data, imagem = :imagem WHERE codigo = :codigo");
             $update->bindParam(':descricao', $descricao);
@@ -164,6 +164,14 @@ if (isset($_POST['update'])) {
             $update->bindParam(':codigo', $codigo, PDO::PARAM_INT);
             $update->execute();
         }
+
+        $sqlMovimentacao = $pdo->prepare("INSERT INTO tb_movimentacao (cod_patrimonio, origem, setor, data, data_movimentacao) VALUES (:cod_patrimonio, :origem, :setor, :data, NOW())");
+        $sqlMovimentacao->bindParam(':cod_patrimonio', $codigo, PDO::PARAM_INT);
+        $sqlMovimentacao->bindParam(':origem', $origem);
+        $sqlMovimentacao->bindParam(':setor', $setor);
+        $sqlMovimentacao->bindParam('data', $data);
+        $sqlMovimentacao->execute();
+
 
         // Redireciona para outra página após a atualização
         header("Location: alterar.php");

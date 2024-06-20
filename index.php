@@ -143,6 +143,12 @@
         </form>
 </body>
 <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.target.querySelector('button[type="submit"]').disabled = true;
+    });
+</script>
+
+<script>
     document.getElementById('img_upd').addEventListener('change', function(event){
         const file = event.target.files[0];
         if(file){

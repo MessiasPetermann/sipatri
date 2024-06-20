@@ -1,5 +1,5 @@
 <?php
-// Inclua seu arquivo de conexão com o banco de dados
+
 include "conexao.php";
 
 // Arrays de mapeamento para converter os valores
@@ -109,7 +109,7 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
         classificacao LIKE :buscar OR
         notafiscal LIKE :buscar OR 
         data LIKE :buscar";
-    
+
     $consulta = $pdo->prepare($sql);
     $busca_param = "%$buscar%";
     $consulta->bindParam(':buscar', $busca_param);
@@ -138,11 +138,13 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
             echo "<tr>";
             foreach ($linha as $coluna => $valor) {
                 if ($coluna == 'codigo') {
+                    $codigoPatrimonio = $valor; // Captura o código do patrimônio
                     continue; // Oculta a coluna "codigo"
                 }
+
                 // Verifica e aplica a conversão para os campos necessários
                 if ($coluna == 'setor' && isset($setores[$valor])) {
-                    $valor = $setores[$valor];
+                    $valor = "<span class='detalhes-setor' data-cod-patrimonio='{$codigoPatrimonio}'>" . $setores[$valor] . "</span>";
                 } elseif ($coluna == 'origem' && isset($origens[$valor])) {
                     $valor = $origens[$valor];
                 } elseif ($coluna == 'situacao' && isset($situacoes[$valor])) {
@@ -158,21 +160,138 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
                         $valor = $data->format('d/m/Y');
                     }
                 } elseif ($coluna == 'imagem') {
-                    // Remove a parte local do caminho e cria a URL relativa
-                    $relative_path = str_replace("C:\\xampp\\htdocs\\sispatri\\", "", $valor);
-                    $relative_path = str_replace("\\", "/", $relative_path);
-                    $url = "/sispatri/uploads/" . basename($relative_path); // Usa apenas o nome do arquivo
-                    $valor = "<a href='" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "' target='_blank'>Ver imagem</a>";
+                    // Verifica se há uma imagem antes de criar o link
+                    if (!empty($valor)) {
+                        // Remove a parte local do caminho e cria a URL relativa
+                        $relative_path = str_replace("C:\\xampp\\htdocs\\sispatri\\", "", $valor);
+                        $relative_path = str_replace("\\", "/", $relative_path);
+                        $url = "/sispatri/uploads/" . basename($relative_path); // Usa apenas o nome do arquivo
+                        $valor = "<a href='" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "' target='_blank'>Ver imagem</a>";
+                    } else {
+                        $valor = ''; // Não exibe nada se não houver imagem
+                    }
                 } else {
                     $valor = htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
                 }
+
+                // Imprime o valor da célula
                 echo "<td>" . $valor . "</td>";
             }
             echo "</tr>";
         }
-        echo "</tbody></table>";
-    } else {
-        echo "Nenhum resultado encontrado.";
     }
 }
+echo "</tbody></table>";
 ?>
+
+<html>
+<div id="patrimonioModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Detalhes de Movimentação</h2>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%;
+        border-radius: 10px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+</html>
+<script>
+    $(document).ready(function() {
+        $('table').on('click', '.detalhes-setor', function() {
+            var codigoPatrimonio = $(this).data('cod-patrimonio'); 
+            console.log("Código do Patrimônio:", codigoPatrimonio);
+
+            // Requisição AJAX para buscar os detalhes da movimentação
+            $.ajax({
+                url: 'detalhes_movimentacao.php',
+                type: 'GET',
+                data: {
+                    cod_patrimonio: codigoPatrimonio
+                },
+                success: function(response) {
+                    var modalBody = $("#modalBody");
+                    modalBody.empty(); // Limpa o conteúdo anterior
+
+                    try {
+                        var detalhes = JSON.parse(response);
+
+                        if (detalhes.error) {
+                            modalBody.append("<p>" + detalhes.error + "</p>");
+                        } else {
+                            var content = "<table border='1' style='width: 100%; border-collapse: collapse;'><tr><th>Origem</th><th>Setor</th><th>Data</th><th>Data Movimentação</th></tr>";
+
+                            detalhes.forEach(function(detalhe) {
+                                content += "<tr>";
+                                content += "<td>" + (detalhe.origem ? detalhe.origem : 'Não informado') + "</td>";
+                                content += "<td>" + (detalhe.setor ? detalhe.setor : 'Não informado') + "</td>";
+                                content += "<td>" + (detalhe.data ? detalhe.data : 'Não informado') + "</td>";
+                                content += "<td>" + (detalhe.data_movimentacao ? detalhe.data_movimentacao : 'Não informado') + "</td>";
+                                content += "</tr>";
+                            });
+                            content += "</table>";
+                            modalBody.append(content);
+                        }
+
+                        // Abre o modal
+                        $("#patrimonioModal").css("display", "block");
+                    } catch (e) {
+                        modalBody.append("<p>Erro ao processar os dados recebidos.</p>");
+                    }
+                },
+                error: function() {
+                    alert('Erro ao buscar os detalhes da movimentação.');
+                }
+            });
+        });
+
+        // Fechar o modal ao clicar no X
+        $(".close").on('click', function() {
+            $("#patrimonioModal").css("display", "none");
+        });
+
+        // Fechar o modal ao clicar fora dele
+        $(window).on('click', function(event) {
+            if (event.target == $("#patrimonioModal")[0]) {
+                $("#patrimonioModal").css("display", "none");
+            }
+        });
+    });
+</script>

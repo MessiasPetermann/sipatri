@@ -156,14 +156,19 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
                         $valor = $data->format('d/m/Y');
                     }
                 } elseif ($coluna == 'imagem') {
-                    // Remove a parte local do caminho e cria a URL relativa
-                    $relative_path = str_replace("C:\\xampp\\htdocs\\sispatri\\", "", $valor);
-                    $relative_path = str_replace("\\", "/", $relative_path);
-                    $url = "/sispatri/uploads/" . basename($relative_path); // Usa apenas o nome do arquivo
-                    $valor = "<a href='" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "' target='_blank'>Ver imagem</a>";
+                    if (!empty($valor)) {
+                        // Remove a parte local do caminho e cria a URL relativa
+                        $relative_path = str_replace("C:\\xampp\\htdocs\\sispatri\\", "", $valor);
+                        $relative_path = str_replace("\\", "/", $relative_path);
+                        $url = "/sispatri/uploads/" . basename($relative_path); // Usa apenas o nome do arquivo
+                        $valor = "<a href='" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "' target='_blank'>Ver imagem</a>";
+                    } else {
+                        $valor = ''; // Não exibe nada se não houver imagem
+                    }
                 } else {
                     $valor = htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
                 }
+
                 echo "<td>" . $valor . "</td>";
             }
             echo "<td><a href='editar.php?codigo=" . htmlspecialchars($linha['codigo'], ENT_QUOTES, 'UTF-8') . "'><i class='bi bi-pencil-square' style='font-size: 1.5em;' alt=''></i></a></td>";

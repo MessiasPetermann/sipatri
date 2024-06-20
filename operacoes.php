@@ -82,6 +82,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
     }
 
+
+    $lastPatrimonioId = $pdo->lastInsertId();
+
+    // Insere o registro na tabela de movimentação
+    $sqlMovimentacao = $pdo->prepare("INSERT INTO tb_movimentacao (cod_patrimonio, origem, setor, data) VALUES (:cod_patrimonio, :origem, :setor, :data)");
+    $sqlMovimentacao->execute([
+        'cod_patrimonio' => $lastPatrimonioId,
+        'origem' => $_POST['origem'],
+        'setor' => $_POST['setor'],
+        'data' => $_POST['data'],
+    ]);
+
     header("Location: index.php");
     exit();
 } else {
