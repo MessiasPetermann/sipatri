@@ -1,3 +1,56 @@
+<html>
+<div id="patrimonioModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Detalhes de Movimentação</h2>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%;
+        border-radius: 10px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .sublinhado {
+        text-decoration: underline;
+    }
+</style>
+</html>
+
 <?php
 
 include "conexao.php";
@@ -125,7 +178,6 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
         echo "<table>";
         echo "<thead><tr>";
 
-        // Exibir os cabeçalhos das colunas em maiúsculo
         foreach ($resultados[0] as $coluna => $valor) {
             if ($coluna != 'codigo') { // Oculta a coluna "codigo"
                 echo "<th>" . strtoupper(htmlspecialchars($coluna)) . "</th>";
@@ -138,13 +190,13 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
             echo "<tr>";
             foreach ($linha as $coluna => $valor) {
                 if ($coluna == 'codigo') {
-                    $codigoPatrimonio = $valor; // Captura o código do patrimônio
+                    $codigoPatrimonio = $valor;
                     continue; // Oculta a coluna "codigo"
                 }
 
                 // Verifica e aplica a conversão para os campos necessários
                 if ($coluna == 'setor' && isset($setores[$valor])) {
-                    $valor = "<span class='detalhes-setor' data-cod-patrimonio='{$codigoPatrimonio}'>" . $setores[$valor] . "</span>";
+                    $valor = "<span class='detalhes-setor' style='cursor: pointer;' data-cod-patrimonio='{$codigoPatrimonio}'>" . $setores[$valor] . "</span>";
                 } elseif ($coluna == 'origem' && isset($origens[$valor])) {
                     $valor = $origens[$valor];
                 } elseif ($coluna == 'situacao' && isset($situacoes[$valor])) {
@@ -165,16 +217,14 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
                         // Remove a parte local do caminho e cria a URL relativa
                         $relative_path = str_replace("C:\\xampp\\htdocs\\sispatri\\", "", $valor);
                         $relative_path = str_replace("\\", "/", $relative_path);
-                        $url = "/sispatri/uploads/" . basename($relative_path); // Usa apenas o nome do arquivo
+                        $url = "/sispatri/uploads/" . basename($relative_path); 
                         $valor = "<a href='" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "' target='_blank'>Ver imagem</a>";
                     } else {
-                        $valor = ''; // Não exibe nada se não houver imagem
+                        $valor = '';
                     }
                 } else {
                     $valor = htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
                 }
-
-                // Imprime o valor da célula
                 echo "<td>" . $valor . "</td>";
             }
             echo "</tr>";
@@ -184,60 +234,11 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
 echo "</tbody></table>";
 ?>
 
-<html>
-<div id="patrimonioModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Detalhes de Movimentação</h2>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0, 0, 0);
-        background-color: rgba(0, 0, 0, 0.4);
-        padding-top: 60px;
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 5% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 50%;
-        border-radius: 10px;
-    }
-
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
-
-</html>
 <script>
     $(document).ready(function() {
         $('table').on('click', '.detalhes-setor', function() {
             var codigoPatrimonio = $(this).data('cod-patrimonio'); 
-            console.log("Código do Patrimônio:", codigoPatrimonio);
+            console.log("Código do Patrimônio:", codigoPatrimonio); 
 
             // Requisição AJAX para buscar os detalhes da movimentação
             $.ajax({
@@ -248,7 +249,7 @@ echo "</tbody></table>";
                 },
                 success: function(response) {
                     var modalBody = $("#modalBody");
-                    modalBody.empty(); // Limpa o conteúdo anterior
+                    modalBody.empty();
 
                     try {
                         var detalhes = JSON.parse(response);
@@ -292,6 +293,33 @@ echo "</tbody></table>";
             if (event.target == $("#patrimonioModal")[0]) {
                 $("#patrimonioModal").css("display", "none");
             }
+        });
+
+        $('table .detalhes-setor').each(function() {
+            var $this = $(this);
+            var codigoPatrimonio = $this.data('cod-patrimonio');
+
+            $.ajax({
+                url: 'detalhes_movimentacao.php',
+                type: 'GET',
+                data: {
+                    cod_patrimonio: codigoPatrimonio
+                },
+                success: function(response) {
+                    try {
+                        var detalhes = JSON.parse(response);
+
+                        if (detalhes && detalhes.length > 0) {
+                            $this.addClass('sublinhado');
+                        }
+                    } catch (e) {
+                        console.log('Erro ao processar os dados recebidos.');
+                    }
+                },
+                error: function() {
+                    console.log('Erro ao verificar movimentações.');
+                }
+            });
         });
     });
 </script>

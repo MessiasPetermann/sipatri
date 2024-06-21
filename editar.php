@@ -20,7 +20,7 @@ if (isset($_GET['codigo']) && !empty($_GET['codigo'])) {
     }
 }
 
-// Arrays de mapeamento para os selects
+// Arrays de mapeamento
 $setores = [
     'TI01' => 'Tecnologia da Informação',
     'AS01' => 'ASSEIJ',
@@ -172,8 +172,6 @@ if (isset($_POST['update'])) {
         $sqlMovimentacao->bindParam('data', $data);
         $sqlMovimentacao->execute();
 
-
-        // Redireciona para outra página após a atualização
         header("Location: alterar.php");
         exit;
     }

@@ -64,7 +64,6 @@ if (isset($_GET['cod_patrimonio']) && !empty($_GET['cod_patrimonio'])) {
         $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
         if ($resultados) {
-            // Formatar dados
             foreach ($resultados as &$resultado) {
                 // Converter origem e setor
                 if (isset($origens[$resultado['origem']])) {
