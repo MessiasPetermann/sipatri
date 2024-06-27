@@ -103,6 +103,7 @@ if (isset($_POST['update'])) {
     $identificacao = $_POST['identificacao'];
     $classificacao = $_POST['classificacao'];
     $data = $_POST['data'];
+    $justificativa = $_POST['justificativa'];
 
     // Validação de cada campo
     if (empty($descricao)) {
@@ -165,11 +166,12 @@ if (isset($_POST['update'])) {
             $update->execute();
         }
 
-        $sqlMovimentacao = $pdo->prepare("INSERT INTO tb_movimentacao (cod_patrimonio, origem, setor, data, data_movimentacao) VALUES (:cod_patrimonio, :origem, :setor, :data, NOW())");
+        $sqlMovimentacao = $pdo->prepare("INSERT INTO tb_movimentacao (cod_patrimonio, origem, setor, data, data_movimentacao, justificativa) VALUES (:cod_patrimonio, :origem, :setor, :data, NOW(), :justificativa)");
         $sqlMovimentacao->bindParam(':cod_patrimonio', $codigo, PDO::PARAM_INT);
         $sqlMovimentacao->bindParam(':origem', $origem);
         $sqlMovimentacao->bindParam(':setor', $setor);
         $sqlMovimentacao->bindParam('data', $data);
+        $sqlMovimentacao->bindParam(':justificativa', $justificativa);
         $sqlMovimentacao->execute();
 
         header("Location: alterar.php");
@@ -253,14 +255,18 @@ if (isset($_POST['update'])) {
             <input type="date" id="data" name="data" value="<?php echo htmlspecialchars($patrimonio['data'] ?? ''); ?>" required><br>
 
             <label for="imagem">Imagem:</label>
-        <input type="file" id="imagem" name="imagem"><br>
-        <?php 
+            <input type="file" id="imagem" name="imagem"><br>
+            <?php 
             if (!empty($patrimonio['imagem'])){
                 echo '<img id="previewImage" src="'.htmlspecialchars($patrimonio['imagem']).'" alt="Imagem Selecionada" style="display: block;">';
             }else{
                 echo '<p>Nenhuma imagem selecionada.</p>';
             }
-        ?>
+            ?>
+            
+            <label for="justificativa">Justificativa:</label>
+            <textarea id="justificativa" name="justificativa"><?php echo htmlspecialchars($patrimonio['justificativa'] ?? ''); ?></textarea><br>
+
             <button type="submit" name="update">Atualizar</button>
         </form>
     </div>

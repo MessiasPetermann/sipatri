@@ -123,6 +123,9 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
     if ($resultados) {
         echo "<table>";
         echo "<thead><tr>";
+        
+        // Adiciona o cabeçalho da coluna de edição
+        echo "<th> </th>";
 
         foreach ($resultados[0] as $coluna => $valor) {
             if ($coluna != 'codigo') { // Oculta a coluna "codigo"
@@ -134,6 +137,8 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
 
         foreach ($resultados as $linha) {
             echo "<tr>";
+            echo "<td><a href='editar.php?codigo=" . htmlspecialchars($linha['codigo'], ENT_QUOTES, 'UTF-8') . "'><i class='bi bi-pencil-square' style='font-size: 1.5em;' alt=''></i></a></td>";
+
             foreach ($linha as $coluna => $valor) {
                 if ($coluna == 'codigo') {
                     continue; // Oculta a coluna "codigo"
@@ -171,7 +176,6 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
 
                 echo "<td>" . $valor . "</td>";
             }
-            echo "<td><a href='editar.php?codigo=" . htmlspecialchars($linha['codigo'], ENT_QUOTES, 'UTF-8') . "'><i class='bi bi-pencil-square' style='font-size: 1.5em;' alt=''></i></a></td>";
             echo "</tr>";
         }
 

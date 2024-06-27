@@ -257,7 +257,7 @@ echo "</tbody></table>";
                         if (detalhes.error) {
                             modalBody.append("<p>" + detalhes.error + "</p>");
                         } else {
-                            var content = "<table border='1' style='width: 100%; border-collapse: collapse;'><tr><th>Origem</th><th>Setor</th><th>Data</th><th>Data Movimentação</th></tr>";
+                            var content = "<table border='1' style='width: 100%; border-collapse: collapse;'><tr><th>Origem</th><th>Setor</th><th>Data</th><th>Data Movimentação</th><th>Justificativa</th></tr>";
 
                             detalhes.forEach(function(detalhe) {
                                 content += "<tr>";
@@ -265,6 +265,7 @@ echo "</tbody></table>";
                                 content += "<td>" + (detalhe.setor ? detalhe.setor : 'Não informado') + "</td>";
                                 content += "<td>" + (detalhe.data ? detalhe.data : 'Não informado') + "</td>";
                                 content += "<td>" + (detalhe.data_movimentacao ? detalhe.data_movimentacao : 'Não informado') + "</td>";
+                                content += "<td>" + (detalhe.justificativa ? detalhe.justificativa : 'Não informado') + "</td>";
                                 content += "</tr>";
                             });
                             content += "</table>";
@@ -282,7 +283,7 @@ echo "</tbody></table>";
                 }
             });
         });
-
+    });
         // Fechar o modal ao clicar no X
         $(".close").on('click', function() {
             $("#patrimonioModal").css("display", "none");
@@ -321,5 +322,4 @@ echo "</tbody></table>";
                 }
             });
         });
-    });
 </script>

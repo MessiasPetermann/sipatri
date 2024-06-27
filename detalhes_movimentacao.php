@@ -57,7 +57,7 @@ if (isset($_GET['cod_patrimonio']) && !empty($_GET['cod_patrimonio'])) {
 
     try {
         // Preparar e executar a consulta
-        $sql = "SELECT origem, setor, data, data_movimentacao FROM tb_movimentacao WHERE cod_patrimonio = :cod_patrimonio";
+        $sql = "SELECT origem, setor, data, data_movimentacao, justificativa FROM tb_movimentacao WHERE cod_patrimonio = :cod_patrimonio";
         $consulta = $pdo->prepare($sql);
         $consulta->bindParam(':cod_patrimonio', $cod_patrimonio);
         $consulta->execute();
